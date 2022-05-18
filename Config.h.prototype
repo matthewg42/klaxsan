@@ -1,0 +1,33 @@
+#pragma once
+
+#include <Arduino.h>
+#include <Millis.h>
+
+// If you are not using the Makefile, or don't want to put the AUTH_CODE in the environment #define it here:
+// #define AUTH_CODE "ChangeMe"
+
+#ifndef AUTH_CODE
+#error AUTH_CODE not defined [quoted string value]. You should set this in your environment before building.
+#endif
+
+// Ds1302 module
+const uint8_t PinRtcEna = 10;
+const uint8_t PinRtcClk = 8;
+const uint8_t PinRtcDat = 9;
+
+// Bluetooth module
+const uint8_t PinBtRx = 3;
+const uint8_t PinBtTx = 2;
+
+// Horn relay
+const uint8_t PinRelay = 5;
+
+// Button pin
+const uint8_t PinButton = 7;
+
+// General config constants
+const millis_t AuthDurationMs = 30000;
+const uint8_t  OnTimes = 10;
+const millis_t OnCheckMs = 1000;
+const uint16_t SettingsMagicNumber = 0xBEEB;
+
