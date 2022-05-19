@@ -6,6 +6,9 @@
 // Params: min, max, default
 PersistentSetting<bool> ArmedSetting(false, true, false);
 PersistentSetting<uint8_t> ProbabilitySetting(1, 100, 100);
+PersistentSetting<uint16_t> ButtonCounter(0, UINT16_MAX, 0, 16);
+PersistentSetting<uint16_t> TimeHitCounter(0, UINT16_MAX, 0, 16);   
+PersistentSetting<uint16_t> BeepHitCounter(0, UINT16_MAX, 0, 16);
 PersistentSetting<uint16_t> MagicSetting(0, UINT16_MAX, SettingsMagicNumber);
 
 void checkSettings()
@@ -13,7 +16,7 @@ void checkSettings()
     // Check if we have valid settings
     if (MagicSetting.get() != SettingsMagicNumber) {
         // Save all the settings with their default values
-        DBLN(F("EEPROM nomagic - setting defaults"));
+        DBLN(F("EEPROM magic mismatch - setting defaults"));
         resetSettings();
         MagicSetting.reset(true);
     } else {
@@ -27,6 +30,9 @@ void resetSettings()
     DBLN(F("resetting defaults & save to EEPROM"));
     ArmedSetting.reset(true);
     ProbabilitySetting.reset(true);
+    ButtonCounter.reset(true);
+    TimeHitCounter.reset(true);
+    BeepHitCounter.reset(true);
 }
 
 void printSettings()

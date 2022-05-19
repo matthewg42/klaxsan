@@ -61,7 +61,7 @@ void setup()
         onTime[i].dump();
     }
 
-    checkSettings();
+    checkSettings(); 
     DBLN(F("setup() end"));
     txString(F("KlakSAN up"));
 
@@ -79,6 +79,7 @@ void sound(millis_t ms)
     txString(msg);
     delay(ms);
     digitalWrite(PinRelay, LOW);
+    BeepHitCounter.set(BeepHitCounter.get() + 1, true);
 }
 
 String nowStr()
@@ -238,13 +239,18 @@ String cmdBeep(String period)
 String cmdStat()
 {
     String s = nowStr();
-    s += " arm=";
+    s += " armed=";
     s += ArmedSetting.get() ? 'Y' : 'n';
     s += " on=";
     s += on ? 'Y' : 'n';
-    s += " p=";
+    s += " prob=";
     s += ProbabilitySetting.get();
-    s += '%';
+    s += "%\nbutton=";
+    s += ButtonCounter.get();
+    s += " timehit=";
+    s += TimeHitCounter.get();
+    s += " beephit=";
+    s += BeepHitCounter.get();
     return s;
 }
 
@@ -322,7 +328,9 @@ void loop()
     Button.update();
     if (Button.pushed()) {
         txString("BUT!");
+        ButtonCounter.set(ButtonCounter.get() + 1, true);
         if (on) {
+            TimeHitCounter.set(TimeHitCounter.get() + 1, true);
             if (random(1, 100) < ProbabilitySetting.get()) {
                 sound(random(50, 650));
             }
