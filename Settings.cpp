@@ -9,6 +9,7 @@ PersistentSetting<uint8_t> ProbabilitySetting(1, 100, 100);
 PersistentSetting<uint16_t> ButtonCounter(0, UINT16_MAX, 0, 16);
 PersistentSetting<uint16_t> TimeHitCounter(0, UINT16_MAX, 0, 16);   
 PersistentSetting<uint16_t> BeepHitCounter(0, UINT16_MAX, 0, 16);
+PersistentSetting<uint16_t> ManualCounter(0, UINT16_MAX, 0, 16);
 PersistentSetting<uint16_t> MagicSetting(0, UINT16_MAX, SettingsMagicNumber);
 
 void checkSettings()
@@ -33,14 +34,24 @@ void resetSettings()
     ButtonCounter.reset(true);
     TimeHitCounter.reset(true);
     BeepHitCounter.reset(true);
+    ManualCounter.reset(true);
 }
 
 void printSettings()
 {
+    DBLN(F("Settings:"));
 	DB(F("- ArmedSetting = "));
-	DB(ArmedSetting.get() ? 'Y' : 'n');
+	DBLN(ArmedSetting.get() ? 'Y' : 'n');
 	DB(F("- ProbabilitySetting = "));
 	DB(ProbabilitySetting.get());
     DBLN('%');
+	DB(F("- ButtonCounter = "));
+	DBLN(ButtonCounter.get());
+	DB(F("- TimeHitCounter = "));
+	DBLN(TimeHitCounter.get());
+	DB(F("- BeepHitCounter = "));
+	DBLN(BeepHitCounter.get());
+	DB(F("- ManualCounter = "));
+	DBLN(ManualCounter.get());
 }
 

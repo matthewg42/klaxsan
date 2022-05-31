@@ -67,10 +67,10 @@ void setup()
 
 }
 
-void sound(millis_t ms)
+bool sound(millis_t ms)
 {
     if (!ArmedSetting.get()) {
-        return;
+        return false;
     }
     String msg("BEP[");
     msg += ms;
@@ -79,7 +79,7 @@ void sound(millis_t ms)
     txString(msg);
     delay(ms);
     digitalWrite(PinRelay, LOW);
-    BeepHitCounter.set(BeepHitCounter.get() + 1, true);
+    return true;
 }
 
 String nowStr()
@@ -232,7 +232,9 @@ String cmdBeep(String period)
     if (ms > 1000) {
         return "?l";
     }
-    sound(ms);
+    if (sound(ms)) {
+        ManualCounter.set(ManualCounter.get()+1, true);
+    }
     return "k";
 }
 
@@ -249,8 +251,10 @@ String cmdStat()
     s += ButtonCounter.get();
     s += " timehit=";
     s += TimeHitCounter.get();
-    s += " beephit=";
+    s += " hits=";
     s += BeepHitCounter.get();
+    s += " manual=";
+    s += ManualCounter.get();
     return s;
 }
 
@@ -332,7 +336,9 @@ void loop()
         if (on) {
             TimeHitCounter.set(TimeHitCounter.get() + 1, true);
             if (random(1, 100) < ProbabilitySetting.get()) {
-                sound(random(50, 650));
+                if (sound(random(50, 650))) {
+                    BeepHitCounter.set(BeepHitCounter.get() + 1, true);
+                }
             }
         }
     }
