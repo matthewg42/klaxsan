@@ -24,6 +24,7 @@ millis_t       lastAuthMs     = 0;
 TimePeriod     onTime[OnTimes];
 bool           on = false;
 millis_t       lastOnCheckMs = 0;
+millis_t       lastActivatedMs = 0;
 
 String cmdStat();
 
@@ -95,6 +96,19 @@ String nowStr()
 bool isAuthorized()
 {
     return lastAuthMs > 0 && MillisSince(lastAuthMs) < AuthDurationMs;
+}
+
+bool isCooling()
+{
+    millis_t coolDownPeriodMs = (millis_t)(CoolDownSetting.get()) * 1000;
+    millis_t msSinceActivated = MillisSince(lastActivatedMs);
+    bool cooling = lastActivatedMs > 0 && msSinceActivated < coolDownPeriodMs;
+    if (cooling) {
+        String msg("cooling ");
+        msg += String((coolDownPeriodMs - msSinceActivated) / 1000);
+        txString(msg);
+    }
+    return cooling;
 }
 
 void setAuth(bool on = true)
@@ -241,11 +255,13 @@ String cmdBeep(String period)
 String cmdStat()
 {
     String s = nowStr();
-    s += " armed=";
+    s += " arm=";
     s += ArmedSetting.get() ? 'Y' : 'n';
     s += " on=";
     s += on ? 'Y' : 'n';
-    s += " prob=";
+    s += " cd=";
+    s += CoolDownSetting.get();
+    s += " prb=";
     s += ProbabilitySetting.get();
     s += "%\nbutton=";
     s += ButtonCounter.get();
@@ -265,6 +281,16 @@ String cmdProb(String prob)
         return "?v";
     }
     ProbabilitySetting.set(percent, true);
+    return "k";
+}
+
+String cmdCool(String cool)
+{
+    uint16_t seconds = cool.toInt();
+    if (seconds < 0 || seconds > 600) {
+        return "?v";
+    }
+    CoolDownSetting.set(seconds, true);
     return "k";
 }
 
@@ -301,6 +327,8 @@ void triggerCmd()
         IFAUTH(cmdStat());
     } else if (cmd.startsWith("PROB")) {
         IFAUTH(cmdProb(removeLeading(cmd, 4)));
+    } else if (cmd.startsWith("COOL")) {
+        IFAUTH(cmdCool(removeLeading(cmd, 4)));
     }
     txString(response);
     cmd = "";
@@ -336,8 +364,11 @@ void loop()
         if (on) {
             TimeHitCounter.set(TimeHitCounter.get() + 1, true);
             if (random(1, 100) < ProbabilitySetting.get()) {
-                if (sound(random(50, 650))) {
-                    BeepHitCounter.set(BeepHitCounter.get() + 1, true);
+                if (!isCooling()) {
+                    if (sound(random(50, 650))) {
+                        lastActivatedMs = Millis();
+                        BeepHitCounter.set(BeepHitCounter.get() + 1, true);
+                    }
                 }
             }
         }

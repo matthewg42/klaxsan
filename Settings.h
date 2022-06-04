@@ -4,6 +4,7 @@
 #include "Config.h"
 
 extern PersistentSetting<bool> ArmedSetting;
+extern PersistentSetting<uint16_t> CoolDownSetting;
 extern PersistentSetting<uint8_t> ProbabilitySetting;
 extern PersistentSetting<uint16_t> ButtonCounter;
 extern PersistentSetting<uint16_t> TimeHitCounter;

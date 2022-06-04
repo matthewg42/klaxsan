@@ -5,6 +5,7 @@
 
 // Params: min, max, default
 PersistentSetting<bool> ArmedSetting(false, true, false);
+PersistentSetting<uint16_t> CoolDownSetting(0, 600, 15, 16);
 PersistentSetting<uint8_t> ProbabilitySetting(1, 100, 100);
 PersistentSetting<uint16_t> ButtonCounter(0, UINT16_MAX, 0, 16);
 PersistentSetting<uint16_t> TimeHitCounter(0, UINT16_MAX, 0, 16);   
@@ -30,6 +31,7 @@ void resetSettings()
 {
     DBLN(F("resetting defaults & save to EEPROM"));
     ArmedSetting.reset(true);
+    CoolDownSetting.reset(true);
     ProbabilitySetting.reset(true);
     ButtonCounter.reset(true);
     TimeHitCounter.reset(true);
@@ -40,18 +42,20 @@ void resetSettings()
 void printSettings()
 {
     DBLN(F("Settings:"));
-	DB(F("- ArmedSetting = "));
-	DBLN(ArmedSetting.get() ? 'Y' : 'n');
-	DB(F("- ProbabilitySetting = "));
-	DB(ProbabilitySetting.get());
+    DB(F("- ArmedSetting = "));
+    DBLN(ArmedSetting.get() ? 'Y' : 'n');
+    DB(F("- CoolDownSetting = "));
+    DBLN(CoolDownSetting.get());
+    DB(F("- ProbabilitySetting = "));
+    DB(ProbabilitySetting.get());
     DBLN('%');
-	DB(F("- ButtonCounter = "));
-	DBLN(ButtonCounter.get());
-	DB(F("- TimeHitCounter = "));
-	DBLN(TimeHitCounter.get());
-	DB(F("- BeepHitCounter = "));
-	DBLN(BeepHitCounter.get());
-	DB(F("- ManualCounter = "));
-	DBLN(ManualCounter.get());
+    DB(F("- ButtonCounter = "));
+    DBLN(ButtonCounter.get());
+    DB(F("- TimeHitCounter = "));
+    DBLN(TimeHitCounter.get());
+    DB(F("- BeepHitCounter = "));
+    DBLN(BeepHitCounter.get());
+    DB(F("- ManualCounter = "));
+    DBLN(ManualCounter.get());
 }
 

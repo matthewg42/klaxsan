@@ -1,0 +1,33 @@
+
+2022-06-04 11:00:00 (Sat)
+-------------------------
+
+This morning was not working. Assumed electroncs battery dead from high relay use, so went to retrieve
+control package.  Dismayed to see the Arduino wtill powered. Turns out RTC had reset. Not sure why. 
+It had rained overnight, so moisture might have been an issue, although the waterproofing bag seems to
+to be working well enough.
+
+Noticed a lot of sanitizer oozing down back of MDF panel - cheap pumps are a bit messy. Probably better
+that it oozes down than fills button compartment.  Should clean off through - don't want vapour build-up
+inside box with DC brushed motor activating.
+
+
+2022-06-04 13:30:00 (Sat)
+-------------------------
+
+Added CoolOffSetting, and code to update / use it. Reason is so that when it's empty, and people are 
+pressing the pump many times to try to get something out of it, it doesn't keep going off too much.
+Can set remotely with COOL##, up to 600 seconds.
+
+This will reset the stats because EEPROM MagicSetting will change location, so here's record of where 
+we're at (includes testing use, but that wasn't very much - about 30 activations):
+
+button      5417
+timehit     2832
+hits        722
+manual      54
+
+
+
+
+

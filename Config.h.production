@@ -29,4 +29,4 @@ const uint8_t PinButton = 4;
 const millis_t AuthDurationMs = 60000;
 const uint8_t  OnTimes = 10;
 const millis_t OnCheckMs = 1000;
-const uint16_t SettingsMagicNumber = 0xBEEB;
+const uint16_t SettingsMagicNumber = 0xBEEF;
